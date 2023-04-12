@@ -13,8 +13,8 @@ TagManager:
   - UI
   - Camera
   - Highlight
-  - GoblinUnits
-  - KoboldUnits
+  - PlayerUnits
+  - EnemyUnits
   - RatUnits
   - 
   - 
