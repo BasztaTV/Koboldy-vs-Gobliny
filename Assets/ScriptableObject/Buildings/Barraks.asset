@@ -15,9 +15,8 @@ MonoBehaviour:
   type: 0
   name: 
   buildingPrefab: {fileID: 2197639557846274673, guid: 7e70a5398e44e1d488fc27818c99174d, type: 3}
-  Units:
-    basicUnits:
-    - {fileID: 0}
+  icon: {fileID: 6472032818808648856, guid: e83669bcbe1d64b459a5e5b4dc7ca516, type: 3}
+  spawnTime: 0
   baseStats:
     health: 500
     armor: 25

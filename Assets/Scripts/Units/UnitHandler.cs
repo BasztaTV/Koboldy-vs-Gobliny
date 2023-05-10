@@ -21,12 +21,6 @@ namespace G.K.S.Units
 
         }
 
-        private void Start()
-        {
-            pUnitLayer = LayerMask.NameToLayer("PlayerUnits");
-            eUnitLayer = LayerMask.NameToLayer("EnemyUnits");
-        }
-
         public UnitStatTypes.Base GetBasicUnitStats(string type)
         {
             BasicUnit unit;
@@ -55,37 +49,7 @@ namespace G.K.S.Units
                     return null;
             }
             return unit.baseStats;
-        }
-        public void SetBasicUnitStats(Transform type)
-        {
-            Transform pUnits = PlayerManager.instance.playerUnits;
-            Transform eUnits = PlayerManager.instance.enemyUnits;
-
-            foreach (Transform child in type)
-            {
-                foreach (Transform tf in child)
-                {
-                    string name = child.name.ToLower();
-                    var stats = GetBasicUnitStats(name);
-
-                    if (type == pUnits)
-                    {
-                        Player.PlayerUnit pU = tf.GetComponent<Player.PlayerUnit>();
-                        pU.baseStats = GetBasicUnitStats(name);
-                    }
-                    else if (type == eUnits)
-                    {
-
-                        Enemy.EnemyUnit eU = tf.GetComponent<Enemy.EnemyUnit>();
-                        eU.baseStats = GetBasicUnitStats(name);
-                    }
-
-                    //if we have any upgrades add them now
-                    //add upgrages to unit stats
-                }
-            }
-        }
-
+        }        
     }
 
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using G.K.S.Units.Player;
-
+using UnityEngine.EventSystems;
 namespace G.K.S.InputManager
 {
     public class InputHandler : MonoBehaviour
@@ -12,6 +12,9 @@ namespace G.K.S.InputManager
         private RaycastHit hit; //what we hit with ray
 
         public List<Transform> selectedUnits = new List<Transform>();
+        public Transform selectedBuilding = null;
+
+        public LayerMask interactableLayer = new LayerMask();
 
         private bool isDragging = false;
 
@@ -21,9 +24,6 @@ namespace G.K.S.InputManager
         {
             instance = this;
         }        
-        void Start()
-        {
-        }
 
         private void OnGUI()
         {
@@ -39,43 +39,44 @@ namespace G.K.S.InputManager
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if (EventSystem.current.IsPointerOverGameObject())
+                {
+                    return;
+                }
                 mousePos = Input.mousePosition;
                 //crate a ray
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 //check if we hit something
-                if (Physics.Raycast(ray, out hit))
+                if (Physics.Raycast(ray, out hit, 100, interactableLayer))
                 {
-                    //if we do, then do something with that data
-                    LayerMask layerHit = hit.transform.gameObject.layer;
-
-                    switch (layerHit.value)
+                    if (addedUnit(hit.transform, Input.GetKey(KeyCode.LeftShift)))
                     {
-                        case 8: // Units Layer
-                            // do something
-                            SelectUnit(hit.transform, Input.GetKey(KeyCode.LeftShift));
-                            break;
-                        default: // if none of the above happens 
-                            // do something
-                            isDragging = true;
-                            DeselectUnits();
-                            break;
+                        // be able to do stuff with units
                     }
-
+                    else if (addedBuilding(hit.transform))
+                    {
+                        // be able to do stuff with building
+                    }
                 }
-                
+                else
+                {
+                    isDragging = true;
+                    DeselectUnits();
+                }
+
             }
 
             if (Input.GetMouseButtonUp(0))
-            {               
+            {
 
-              foreach (Transform child in Player.PlayerManager.instance.playerUnits)
+                foreach (Transform child in Player.PlayerManager.instance.playerUnits)
                 {
                     foreach (Transform unit in child)
                     {
                         if (isWithinSelectionBounds(unit))
                         {
-                            SelectUnit(unit, true);
-                        }                   
+                            addedUnit(unit, true);
+                        }
                     }
                 }
                 isDragging = false;
@@ -101,7 +102,7 @@ namespace G.K.S.InputManager
                             break;
                         default: // if none of the above happens 
                             // do something
-                            foreach(Transform unit in selectedUnits)
+                            foreach (Transform unit in selectedUnits)
                             {
                                 PlayerUnit pU = unit.gameObject.GetComponent<PlayerUnit>();
                                 pU.MoveUnit(hit.point);
@@ -110,25 +111,30 @@ namespace G.K.S.InputManager
                     }
                 }
             }
-        }
-        private void SelectUnit(Transform unit, bool canMultiselect = false)
-        {
-            if (!canMultiselect)
-            {
-                DeselectUnits();
-            }    
-            selectedUnits.Add(unit);
-            // lets set an obj on the unit called Higlight
-            unit.Find("Highlight").gameObject.SetActive(true);
-        }
 
+            else if (Input.GetMouseButtonDown(1) && selectedBuilding != null) 
+            {
+                selectedBuilding.gameObject.GetComponent<Interactables.IBuilding>().SetSpawnMarkerLocation();
+            }
+
+        }
+      
         private void DeselectUnits()
         {
-            for (int i = 0; i < selectedUnits.Count; i++)
+            if (selectedBuilding != null)
             {
-                selectedUnits[i].Find("Highlight").gameObject.SetActive(false);
+                selectedBuilding.gameObject.GetComponent<Interactables.IBuilding>().OnInteractExit();
+                selectedBuilding = null;
             }
-            selectedUnits.Clear();
+            if (selectedUnits.Count > 0)
+            {
+                for (int i = 0; i < selectedUnits.Count; i++)
+                {
+                    selectedUnits[i].gameObject.GetComponent<Interactables.IUnit>().OnInteractExit();
+                }
+                selectedUnits.Clear();
+            }
+            
         }
 
         private bool isWithinSelectionBounds(Transform tf)
@@ -154,6 +160,48 @@ namespace G.K.S.InputManager
                 return false;
             }
         }    
+
+        private Interactables.IUnit addedUnit(Transform tf, bool canMultiselect = false)
+        {
+            Interactables.IUnit iUnit = tf.GetComponent<Interactables.IUnit>();
+            if (iUnit)
+            {
+                if(!canMultiselect)
+                {
+                    DeselectUnits();
+                }
+
+                selectedUnits.Add(iUnit.gameObject.transform);
+
+                iUnit.OnInteractEnter();
+
+                return iUnit;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private Interactables.IBuilding addedBuilding(Transform tf)
+        {
+            Interactables.IBuilding iBuilding = tf.GetComponent<Interactables.IBuilding>();
+
+            if (iBuilding)
+            {
+                DeselectUnits();
+
+                selectedBuilding = iBuilding.gameObject.transform;
+
+                selectedBuilding.gameObject.GetComponent<Interactables.IBuilding>().OnInteractEnter();
+
+                return iBuilding;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }
 

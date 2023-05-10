@@ -18,8 +18,8 @@ namespace G.K.S.Buildings
         public buildingType type;
         public new string name;
         public GameObject buildingPrefab;
-        public BuildingActions.BuildingUnits Units;
-
+        public GameObject icon;
+        public float spawnTime;
 
         [Space(15)]
         [Header("Building Base Stats")]

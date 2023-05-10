@@ -61,17 +61,14 @@ namespace G.K.S.Units.Enemy
 
         private void CheckForEnemyTargets()
         {
-            rangeColliders = Physics.OverlapSphere(transform.position, baseStats.aggroRange);
+            rangeColliders = Physics.OverlapSphere(transform.position, baseStats.aggroRange, UnitHandler.instance.pUnitLayer);
 
-            for (int i = 0; i < rangeColliders.Length; i++)
+            for (int i = 0; i < rangeColliders.Length;)
             {
-                if (rangeColliders[i].gameObject.layer == UnitHandler.instance.pUnitLayer)
-                {
-                    aggroTarget = rangeColliders[i].gameObject.transform;
-                    aggroUnit = aggroTarget.gameObject.GetComponent<Player.PlayerUnit>();
-                    hasAggro = true;
-                    break;
-                }
+                aggroTarget = rangeColliders[i].gameObject.transform;
+                aggroUnit = aggroTarget.gameObject.GetComponent<Player.PlayerUnit>();
+                hasAggro = true;
+                break;
             }
         }
 

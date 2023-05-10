@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 5258990050842568555}
   - component: {fileID: -2894216766672077544}
   - component: {fileID: 1228739148540205079}
+  - component: {fileID: 3786130990773502039}
   m_Layer: 8
   m_Name: goblinUnit
   m_TagString: Untagged
@@ -230,6 +231,20 @@ MonoBehaviour:
   unitStatsDisplay: {fileID: 8567974209700891511}
   healthBarAmount: {fileID: 2061124456148016262}
   currentHealth: 0
+--- !u!114 &3786130990773502039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5258990050842568556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 061fd4aa504af024ab7dc287551ab136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInteracting: 0
+  highlight: {fileID: 1354892344290203764}
 --- !u!1001 &2820338650449310740
 PrefabInstance:
   m_ObjectHideFlags: 0

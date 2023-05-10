@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace G.K.S.Units
 {
     [CreateAssetMenu(fileName = "New Unit", menuName ="New Unit/Basic")]
@@ -25,6 +24,8 @@ namespace G.K.S.Units
         public GameObject goblinPrefab;
         public GameObject koboldPrefab;
         public GameObject ratPrefab;
+        public GameObject icon;
+        public float spawnTime;
 
         [Space(15)]
         [Header("Unit Stats")]
