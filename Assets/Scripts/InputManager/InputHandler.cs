@@ -12,6 +12,7 @@ namespace G.K.S.InputManager
         private RaycastHit hit; //what we hit with ray
 
         public List<Transform> selectedUnits = new List<Transform>();
+        public List<PlayerUnit> selectedUnitsPlayer = new List<PlayerUnit>();
         public Transform selectedBuilding = null;
 
         public LayerMask interactableLayer = new LayerMask();
@@ -97,8 +98,11 @@ namespace G.K.S.InputManager
                         case 8: // Units Layer
                             // do something                           
                             break;
-                        case 9: // enemy units layer
-                            // attack or set target
+                        case 9:
+                            foreach (var selectableObj in selectedUnits)
+                            {
+                                selectableObj.GetComponent<PlayerUnit>().SetNewTarget(hit.transform);
+                            }
                             break;
                         default: // if none of the above happens 
                             // do something

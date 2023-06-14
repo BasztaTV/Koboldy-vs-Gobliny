@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using G.K.S.Units.Player;
 
 namespace G.K.S.Units.Enemy
 {
@@ -81,6 +82,12 @@ namespace G.K.S.Units.Enemy
             }
         }
 
+        public void TakeDamage(PlayerUnit playerUnit,float dmg)
+        {
+            float totalDamage = dmg - baseStats.armor;
+            currentHealth -= totalDamage;
+        }
+
         public void TakeDamage(float damage)
         {
             float totalDamage = damage - baseStats.armor;
@@ -115,7 +122,8 @@ namespace G.K.S.Units.Enemy
             healthBarAmount.fillAmount = currentHealth / baseStats.health;
 
             if (currentHealth <= 0)
-            {              
+            {
+                Debug.Log("Umarl");
                 Die();
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using G.K.S.Units.Enemy;
 
 namespace G.K.S.Units.Player
 {
@@ -21,15 +22,15 @@ namespace G.K.S.Units.Player
 
         private Collider[] rangeColliders;
 
-        private Transform aggroTarget;
-
-        private Enemy.EnemyUnit aggroUnit;
+        private Transform aggroUnit;
 
         private bool hasAggro = false;
 
         private float distance;
 
         private float atkCooldown;
+        
+
 
 
         public void OnEnable()
@@ -46,38 +47,30 @@ namespace G.K.S.Units.Player
         private void Update()
         {
             atkCooldown -= Time.deltaTime;
-
-            if (!hasAggro)
-            {
-                CheckForEnemyTargets();
-            }
-            else
-            {
-                Attack();
-                MoveToAggroTarget();
-            }
-
             HandleHealth();
+            if (aggroUnit != null)
+            {
+                navAgent.destination = aggroUnit.position;
+
+                var distance = (transform.position - aggroUnit.position).magnitude;
+
+                if (distance <= baseStats.atkRange)
+                {
+                    Attack();
+                }
+            }
         }
 
-        private void CheckForEnemyTargets()
+        public void SetNewTarget(Transform aggroTarget)
         {
-            rangeColliders = Physics.OverlapSphere(transform.position, baseStats.aggroRange, UnitHandler.instance.eUnitLayer);
-
-            for (int i = 0; i < rangeColliders.Length;)
-            {
-                aggroTarget = rangeColliders[i].gameObject.transform;
-                aggroUnit = aggroTarget.gameObject.GetComponent<Enemy.EnemyUnit>();
-                hasAggro = true;
-                break;
-            }
+            aggroUnit = aggroTarget;
         }
 
         private void Attack()
         {
             if (atkCooldown <= 0 && distance <= baseStats.atkRange + 1)
             {
-                aggroUnit.TakeDamage(baseStats.attack);
+                RTSGameManager.UnitTakeDamage(this, aggroUnit.GetComponent<EnemyUnit>());
                 atkCooldown = baseStats.atkSpeed;
             }
         }
@@ -86,25 +79,6 @@ namespace G.K.S.Units.Player
         {
             float totalDamage = damage - baseStats.armor;
             currentHealth -= totalDamage;
-        }
-
-        private void MoveToAggroTarget()
-        {
-            if (aggroTarget == null)
-            {
-                navAgent.SetDestination(transform.position);
-                hasAggro = false;
-            }
-            else
-            {
-                distance = Vector3.Distance(aggroTarget.position, transform.position);
-                navAgent.stoppingDistance = (baseStats.atkRange + 1);
-
-                if (distance <= baseStats.aggroRange)
-                {
-                    navAgent.SetDestination(aggroTarget.position);
-                }
-            }
         }
 
         public void MoveUnit(Vector3 _destination)
