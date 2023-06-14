@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: -2894216766672077544}
   - component: {fileID: 1228739148540205079}
   - component: {fileID: 3786130990773502039}
+  - component: {fileID: 1399790336646690786}
   m_Layer: 8
   m_Name: goblinUnit
   m_TagString: Untagged
@@ -245,6 +246,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInteracting: 0
   highlight: {fileID: 1354892344290203764}
+--- !u!136 &1399790336646690786
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5258990050842568556}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 10
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &2820338650449310740
 PrefabInstance:
   m_ObjectHideFlags: 0

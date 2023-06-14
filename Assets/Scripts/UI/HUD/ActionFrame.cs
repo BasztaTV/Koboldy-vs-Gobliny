@@ -11,6 +11,7 @@ namespace G.K.S.UI.HUD
 
         [SerializeField] private Button actionButton = null;
         [SerializeField] private Transform layoutGroup = null;
+        [SerializeField] private GameObject parent;
 
         private List<Button> buttons = new List<Button>();
         private PlayerActions actionsList = null;
@@ -128,9 +129,11 @@ namespace G.K.S.UI.HUD
             GameObject spawnedObject = Instantiate(spawnOrder[0], new Vector3(spawnPoint.transform.parent.position.x,
                 spawnPoint.transform.parent.position.y, spawnPoint.transform.parent.position.z), Quaternion.identity);
 
-            spawnedObject.GetComponent<Units.Player.PlayerUnit>().baseStats.health = 50;
+            spawnedObject.GetComponent<Units.Player.PlayerUnit>().baseStats.health = 500;
 
             spawnedObject.GetComponent<Units.Player.PlayerUnit>().MoveUnit(spawnPoint.transform.position);
+
+            spawnedObject.transform.SetParent(parent.transform);
         }
     }
 }
